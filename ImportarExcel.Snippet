@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>SelectElement</Title>
+      <Shortcut>dimport</Shortcut>
+      <Description>Função para importaçaõ de planilha</Description>
+      <Author>Stevao Souza</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+        <SnippetType>SurroundsWith</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="csharp">
+        <![CDATA[
+
+
+			//Não esquecer de instalar o ClosedXML no pacote NUGET
+			public List<EmailEntity> GetDadosPlanilha(string caminho)
+        {
+            List<SuaEnidade> dados = new List<SuaEntidade>();
+
+            try
+            {
+                using (XLWorkbook workbook = new XLWorkbook(caminho))
+                {
+                    int linha = 2;
+
+                    while (!string.IsNullOrEmpty(workbook.Worksheet(1).Cell(linha, 2).Value.ToString()))
+                    {
+                        SuaEnidade data = new SuaEnidade();
+
+                        data.Conta = Convert.ToString(workbook.Worksheet(1).Cell(linha, 1).Value);
+
+                        dados.Add(data);
+                        linha++;
+                    }
+
+
+                }
+            }
+            catch (Exception erro)
+            {
+              if (erro.Message.Contains("porque ele está sendo usado por outro processo"))
+              {
+                  _ = MessageBox.Show("Por favor, Feche a planilha e tente novamente", "PLANILHA ABERTA");
+              }
+              if (erro.Message.Contains("The identifier") && erro.Message.Contains("was not recognised"))
+              {
+                 _ = MessageBox.Show("Erro na leitura dos dados.\nVerifique se não há alguma coluna com fórmula\nao invés de valores.\nFaça a correção e tente novamente!", "ERRO LEITURA");
+              }
+            }
+            return dados;
+        }
+
+    }
+	]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
